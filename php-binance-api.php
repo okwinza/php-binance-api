@@ -957,17 +957,13 @@ class API
         $output = curl_exec($curl);
         // Check if any error occurred
         if (curl_errno($curl) > 0) {
-            // should always output error, not only on httpdebug
-            // not outputing errors, hides it from users and ends up with tickets on github
-            echo 'Curl error: ' . curl_error($curl) . "\n";
-            return [];
+            throw new \RuntimeException(sprintf('CURL ERROR: %s', curl_error($curl)));
         }
+
         curl_close($curl);
         $json = json_decode($output, true);
         if (isset($json['msg'])) {
-            // should always output error, not only on httpdebug
-            // not outputing errors, hides it from users and ends up with tickets on github
-            echo "signedRequest error: {$output}" . PHP_EOL;
+            //not throwing anything, let the userland code deal with the error response.
         }
         $this->transfered += strlen($output);
         $this->requestCount++;
@@ -1025,17 +1021,7 @@ class API
             $opt["timeInForce"] = "GTC";
         }
 
-        if (isset($flags['stopPrice'])) {
-            $opt['stopPrice'] = $flags['stopPrice'];
-        }
-
-        if (isset($flags['icebergQty'])) {
-            $opt['icebergQty'] = $flags['icebergQty'];
-        }
-
-        if (isset($flags['newOrderRespType'])) {
-            $opt['newOrderRespType'] = $flags['newOrderRespType'];
-        }
+        $opt = array_merge($opt, $flags);
 
         $qstring = ($test === false) ? "v3/order" : "v3/order/test";
         return $this->httpRequest($qstring, "POST", $opt, true);
