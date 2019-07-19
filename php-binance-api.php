@@ -14,6 +14,8 @@
 namespace Binance;
 
 // PHP version check
+use Decimal\Decimal;
+
 if (version_compare(phpversion(), '7.0', '<=')) {
     fwrite(STDERR, "Hi, PHP " . phpversion() . " support will be removed very soon as part of continued development.\n");
     fwrite(STDERR, "Please consider upgrading.\n");
@@ -989,7 +991,7 @@ class API
      * @return array containing the response
      * @throws \Exception
      */
-    public function order(string $side, string $symbol, $quantity, $price, string $type = "LIMIT", array $flags = [], bool $test = false)
+    public function order(string $side, string $symbol, Decimal $quantity, Decimal $price, string $type = "LIMIT", array $flags = [], bool $test = false)
     {
         $opt = [
             "symbol" => $symbol,
@@ -999,29 +1001,16 @@ class API
             "recvWindow" => 60000,
         ];
 
-        // someone has preformated there 8 decimal point double already
-        // dont do anything, leave them do whatever they want
-        if (gettype($price) !== "string") {
-            // for every other type, lets format it appropriately
-            $price = number_format($price, 8, '.', '');
-        }
-
-        if (is_numeric($quantity) === false) {
-            // WPCS: XSS OK.
-            echo "warning: quantity expected numeric got " . gettype($quantity) . PHP_EOL;
-        }
-
-        if (is_string($price) === false) {
-            // WPCS: XSS OK.
-            echo "warning: price expected string got " . gettype($price) . PHP_EOL;
-        }
-
         if ($type === "LIMIT" || $type === "STOP_LOSS_LIMIT" || $type === "TAKE_PROFIT_LIMIT") {
             $opt["price"] = $price;
             $opt["timeInForce"] = "GTC";
         }
 
         $opt = array_merge($opt, $flags);
+
+        foreach ($opt as &$item) if ($item instanceof Decimal) {
+            $item = $item->toString();
+        }
 
         $qstring = ($test === false) ? "v3/order" : "v3/order/test";
         return $this->httpRequest($qstring, "POST", $opt, true);
