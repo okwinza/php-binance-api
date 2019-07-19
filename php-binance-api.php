@@ -226,7 +226,7 @@ class API
      * @param $flags array addtional options for order type
      * @return array with error message or the order details
      */
-    public function buy(string $symbol, $quantity, $price, string $type = "LIMIT", array $flags = [])
+    public function buy(string $symbol, Decimal $quantity, Decimal $price, string $type = "LIMIT", array $flags = [])
     {
         return $this->order("BUY", $symbol, $quantity, $price, $type, $flags);
     }
@@ -243,7 +243,7 @@ class API
      * @param $flags array config
      * @return array with error message or empty or the order details
      */
-    public function buyTest(string $symbol, $quantity, $price, string $type = "LIMIT", array $flags = [])
+    public function buyTest(string $symbol, Decimal $quantity, Decimal $price, string $type = "LIMIT", array $flags = [])
     {
         return $this->order("BUY", $symbol, $quantity, $price, $type, $flags, true);
     }
@@ -273,7 +273,7 @@ class API
      * @param $flags array addtional options for order type
      * @return array with error message or the order details
      */
-    public function sell(string $symbol, $quantity, $price, string $type = "LIMIT", array $flags = [])
+    public function sell(string $symbol, Decimal $quantity, Decimal $price, string $type = "LIMIT", array $flags = [])
     {
         return $this->order("SELL", $symbol, $quantity, $price, $type, $flags);
     }
@@ -290,7 +290,7 @@ class API
      * @param $flags array config
      * @return array with error message or empty or the order details
      */
-    public function sellTest(string $symbol, $quantity, $price, string $type = "LIMIT", array $flags = [])
+    public function sellTest(string $symbol, Decimal $quantity, Decimal $price, string $type = "LIMIT", array $flags = [])
     {
         return $this->order("SELL", $symbol, $quantity, $price, $type, $flags, true);
     }
@@ -306,7 +306,7 @@ class API
      * @param $flags array addtional options for order type
      * @return array with error message or the order details
      */
-    public function marketBuy(string $symbol, $quantity, array $flags = [])
+    public function marketBuy(string $symbol, Decimal $quantity, array $flags = [])
     {
         return $this->order("BUY", $symbol, $quantity, 0, "MARKET", $flags);
     }
@@ -321,7 +321,7 @@ class API
      * @param $flags array addtional options for order type
      * @return array with error message or the order details
      */
-    public function marketBuyTest(string $symbol, $quantity, array $flags = [])
+    public function marketBuyTest(string $symbol, Decimal $quantity, array $flags = [])
     {
         return $this->order("BUY", $symbol, $quantity, 0, "MARKET", $flags, true);
     }
@@ -337,7 +337,7 @@ class API
      * @param $flags array addtional options for order type
      * @return array with error message or the order details
      */
-    public function marketSell(string $symbol, $quantity, array $flags = [])
+    public function marketSell(string $symbol, Decimal $quantity, array $flags = [])
     {
         return $this->order("SELL", $symbol, $quantity, 0, "MARKET", $flags);
     }
@@ -352,7 +352,7 @@ class API
      * @param $flags array addtional options for order type
      * @return array with error message or the order details
      */
-    public function marketSellTest(string $symbol, $quantity, array $flags = [])
+    public function marketSellTest(string $symbol, Decimal $quantity, array $flags = [])
     {
         return $this->order("SELL", $symbol, $quantity, 0, "MARKET", $flags, true);
     }
